@@ -1,6 +1,6 @@
 
 
-# Movies-Library - 1.0.0
+# Movies-Library - 1.0
 
 **Author Name**: Mohammad Alsmadi
 
