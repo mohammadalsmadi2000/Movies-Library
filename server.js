@@ -1,3 +1,7 @@
+
+'use strict';
+
+
 const express = require('express');
 
 const cors = require('cors');
@@ -22,7 +26,7 @@ function Movie(title, poster_path, overview) {
 server.get('/', (req, res) => {
 
     const formattedMovies = new Movie(Data.title, Data.poster_path, Data.overview)
-    res.send(formattedMovies);
+    res.status(200).json(formattedMovies);
 })
 
 server.get('/favorite', (req, res) => {
@@ -31,14 +35,18 @@ server.get('/favorite', (req, res) => {
 
 server.get('/error', (req, res) => {
     const temp = {
-        "status": 500,
-        "responseText": "Sorry, something went wrong"
+        status: 500,
+        responseText: "Sorry, something went wrong"
     }
 
-    res.status(500).send(temp)
+    res.status(500).json(temp)
 })
 server.get('*', (req, res) => {
-    res.status(404).send("page not found error");
+    const temp = {
+        status: 404,
+        responseText: "page not found"
+    }
+    res.status(404).json(temp);
 })
 server.listen(PORT, () => {
     console.log('Server listening on port 3000');
