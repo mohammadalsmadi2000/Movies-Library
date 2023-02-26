@@ -117,11 +117,12 @@ function defaultHandler(req, res) {
     }
     res.status(404).send(temp)
 }
-function errorHandler(erorr, req, res) {
+function errorHandler(error, req, res, next) {
     const err = {
         status: 500,
-        massage: erorr
+        massage: error
     }
+
     res.status(500).send(err);
 }
 
