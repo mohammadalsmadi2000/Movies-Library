@@ -56,58 +56,78 @@ function favoriteHandler(req, res) {
 function trendingHandler(req, res) {
     const ApiKey = process.env.APIKey
     const url = `https://api.themoviedb.org/3/trending/all/week?api_key=${ApiKey}&language=en-US`
-    axios.get(url).then((result) => {
+    try {
+        axios.get(url).then((result) => {
 
-        let data = result.data.results;
+            let data = result.data.results;
 
-        let sendInfo = data.map((val) => {
-            return new MovieInfoFromApi(val.id, val.title || val.name, val.release_date || val.first_air_date, val.poster_path, val.overview)
+            let sendInfo = data.map((val) => {
+                return new MovieInfoFromApi(val.id, val.title || val.name, val.release_date || val.first_air_date, val.poster_path, val.overview)
+            })
+
+            res.json(sendInfo)
+        }).catch((err) => {
+            res.send(err);
         })
+    } catch (error) {
+        errorHandler(error, req, res,next);
+    }
 
-        res.json(sendInfo)
-    }).catch((err) => {
-        res.send(err);
-    })
 }
 function searchHandler(req, res) {
     let ApiKey = process.env.APIKey
     // console.log(ApiKey)
     let searchWord = 'Harry%20Potter'
     const url = `https://api.themoviedb.org/3/search/movie?api_key=${ApiKey}&language=en-US&query=${searchWord}&page=2`
-    axios.get(url).then((result) => {
+    try {
+        axios.get(url).then((result) => {
 
-        let data = result.data.results;
+            let data = result.data.results;
 
-        let sendInfo = data.map((val) => {
-            return new MovieInfoFromApi(val.id, val.title || val.name, val.release_date || val.first_air_date, val.poster_path, val.overview)
+            let sendInfo = data.map((val) => {
+                return new MovieInfoFromApi(val.id, val.title || val.name, val.release_date || val.first_air_date, val.poster_path, val.overview)
+            })
+
+            res.json(sendInfo)
+        }).catch((err) => {
+            res.send(err);
         })
 
-        res.json(sendInfo)
-    }).catch((err) => {
-        res.send(err);
-    })
+    }
+    catch (error) {
+        errorHandler(error, req, res,next);
+    }
 }
-
 function reviewHandler(req, res) {
     const idReview = process.env.idReview;
     const ApiKey = process.env.APIKey
-    const url = `https:api.themoviedb.org/3/review/${idReview}?api_key=${ApiKey}`
-    axios.get(url).then((result) => {
-        res.json(result.data)
-    }).catch((err) => {
-        res.send(err);
-    })
+    try {
+        const url = `https:api.themoviedb.org/3/review/${idReview}?api_key=${ApiKey}`
+        axios.get(url).then((result) => {
+            res.json(result.data)
+        }).catch((err) => {
+            res.send(err);
+        })
+    } catch (error) {
+        errorHandler(error, req, res,next);
+    }
+
 
 }
 function tvHandler(req, res) {
     const id = '9813'
     const ApiKey = process.env.APIKey
     const url = `https://api.themoviedb.org/3/tv/${id}?api_key=${ApiKey}`
-    axios.get(url).then((val) => {
-        res.json(val.data)
-    }).catch((err) => {
-        res.send(err);
-    })
+    try {
+        axios.get(url).then((val) => {
+            res.json(val.data)
+        }).catch((err) => {
+            res.send(err);
+        })
+    } catch (error) {
+        errorHandler(error, req, res,next);
+    }
+
 }
 
 function defaultHandler(req, res) {
