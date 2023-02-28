@@ -6,6 +6,7 @@
 const express = require('express');
 
 const cors = require('cors');
+const pg = require('pg');
 
 const server = express();
 const Data = require('./ Movie Data/data.json');
@@ -15,10 +16,12 @@ require('dotenv').config();
 
 server.use(cors());
 server.use(errorHandler)
+server.use(express.json());
 
 
 const PORT = 3000;
 
+const client = new pg.Client(process.env.DATABASE_URL)
 
 function Movie(title, poster_path, overview) {
     this.title = title;
@@ -41,6 +44,8 @@ server.get('/trending', trendingHandler);
 server.get('/search', searchHandler);
 server.get('/review', reviewHandler);
 server.get('/TV', tvHandler);
+server.get('/DataTest', getDataTestHandler)
+server.post('/DataTest', addDataTestHandler)
 server.get('*', defaultHandler)
 
 
@@ -70,7 +75,7 @@ function trendingHandler(req, res) {
             res.send(err);
         })
     } catch (error) {
-        errorHandler(error, req, res,next);
+        errorHandler(error, req, res, next);
     }
 
 }
@@ -95,7 +100,7 @@ function searchHandler(req, res) {
 
     }
     catch (error) {
-        errorHandler(error, req, res,next);
+        errorHandler(error, req, res, next);
     }
 }
 function reviewHandler(req, res) {
@@ -109,7 +114,7 @@ function reviewHandler(req, res) {
             res.send(err);
         })
     } catch (error) {
-        errorHandler(error, req, res,next);
+        errorHandler(error, req, res, next);
     }
 
 
@@ -125,7 +130,7 @@ function tvHandler(req, res) {
             res.send(err);
         })
     } catch (error) {
-        errorHandler(error, req, res,next);
+        errorHandler(error, req, res, next);
     }
 
 }
@@ -137,6 +142,32 @@ function defaultHandler(req, res) {
     }
     res.status(404).send(temp)
 }
+function getDataTestHandler(req, res) {
+
+    const sql = `SELECT * FROM testTable`;
+    client.query(sql).then((data) => {
+        res.send(data.rows)
+    }).catch((err) => {
+        errorHandler(error, req, res, next);
+    })
+}
+function addDataTestHandler(req, res) {
+    const temp = req.body;
+    console.log(temp);
+    const sql = `INSERT INTO testtable (title, release_date, overview, poster_path, comment) VALUES ($1,$2,$3,$4,$5) RETURNING *;`
+    const values = [temp.title, temp.release_date, temp.overview, temp.poster_path,temp.comment];
+    console.log(sql);
+
+    client.query(sql,values)
+    .then((data) => {
+        res.send("your data was added !");
+    })
+        .catch(error => {
+            // console.log(error);
+            errorHandler(error, req, res,next);
+        });
+    console.log(temp)
+}
 function errorHandler(error, req, res, next) {
     const err = {
         status: 500,
@@ -145,7 +176,10 @@ function errorHandler(error, req, res, next) {
 
     res.status(500).send(err);
 }
+client.connect().then(() => {
 
-server.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`);
-})
+    server.listen(PORT, () => {
+        console.log(`Server listening on port ${PORT}`);
+    })
+
+}).catch((err) => { console.log(err) })

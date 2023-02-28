@@ -24,3 +24,6 @@ To build and run the movie app on your own machine, follow these steps:
 
 ### regarding of today lab 12
 1. Request an API from website "TMDB"
+
+### regarding of today lab 13
+1. The Database has been added
