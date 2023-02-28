@@ -44,8 +44,8 @@ server.get('/trending', trendingHandler);
 server.get('/search', searchHandler);
 server.get('/review', reviewHandler);
 server.get('/TV', tvHandler);
-server.get('/DataTest', getDataTestHandler)
-server.post('/DataTest', addDataTestHandler)
+server.get('/Movies', getMoviesHandler)
+server.post('/Movies', addMoviesHandler)
 server.get('*', defaultHandler)
 
 
@@ -142,7 +142,7 @@ function defaultHandler(req, res) {
     }
     res.status(404).send(temp)
 }
-function getDataTestHandler(req, res) {
+function getMoviesHandler(req, res) {
 
     const sql = `SELECT * FROM testTable`;
     client.query(sql).then((data) => {
@@ -151,7 +151,7 @@ function getDataTestHandler(req, res) {
         errorHandler(error, req, res, next);
     })
 }
-function addDataTestHandler(req, res) {
+function addMoviesHandler(req, res) {
     const temp = req.body;
     console.log(temp);
     const sql = `INSERT INTO testtable (title, release_date, overview, poster_path, comment) VALUES ($1,$2,$3,$4,$5) RETURNING *;`
