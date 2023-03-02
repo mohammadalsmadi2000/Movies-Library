@@ -27,3 +27,6 @@ To build and run the movie app on your own machine, follow these steps:
 
 ### regarding of today lab 13
 1. The Database has been added
+
+### regarding of today lab 14
+1. CRUD operations have been applied.
