@@ -1,6 +1,6 @@
 
 'use strict';
-// http://localhost:3000/search
+// http://localhost:3000/
 
 
 const express = require('express');
@@ -19,7 +19,7 @@ server.use(errorHandler)
 server.use(express.json());
 
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const client = new pg.Client(process.env.DATABASE_URL)
 
